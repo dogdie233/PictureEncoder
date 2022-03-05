@@ -1,0 +1,30 @@
+name: Build Latest
+
+on: [push]
+
+env:
+  DOTNET_SDK_VERSION: '6.0.x'
+
+jobs:
+
+  build-win-x64-arm64:
+    
+    runs-on: windows-latest
+    
+    steps:
+      
+      - uses: actions/checkout@v2
+
+      - name: Set up dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
+          include-prerelease: true
+      - name: Build Win64
+        run: dotnet publish -r win-x64 -c Release -o artifact-x64
+
+      - name: Upload Artifact[win-x64]
+        uses: actions/upload-artifact@1.0.0
+        with:
+          name: PictureEncoder_win-x64
+          path: artifact-x64\PictureEncoder.exe
