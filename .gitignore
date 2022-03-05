@@ -1,0 +1,5 @@
+# vs cache
+.vs/
+# output
+PictureEncoder/bin/
+PictureEncoder/obj/
