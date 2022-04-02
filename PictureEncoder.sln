@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PictureEncoder", "PictureEncoder\PictureEncoder.csproj", "{E9CA4196-BBE1-44C5-A07F-790000B4E82C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PictureEncoder-Console", "PictureEncoder-Console\PictureEncoder-Console.csproj", "{E9CA4196-BBE1-44C5-A07F-790000B4E82C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PictureEncoder-WPF", "PictureEncoder-WPF\PictureEncoder-WPF.csproj", "{87F47183-CAF2-4039-A9F5-5693B6ABB2ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PictureEncoder", "PictureEncoder\PictureEncoder.csproj", "{C6681EE3-368D-4FBD-99F7-42CBED22AE28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{E9CA4196-BBE1-44C5-A07F-790000B4E82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9CA4196-BBE1-44C5-A07F-790000B4E82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9CA4196-BBE1-44C5-A07F-790000B4E82C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87F47183-CAF2-4039-A9F5-5693B6ABB2ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F47183-CAF2-4039-A9F5-5693B6ABB2ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F47183-CAF2-4039-A9F5-5693B6ABB2ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F47183-CAF2-4039-A9F5-5693B6ABB2ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6681EE3-368D-4FBD-99F7-42CBED22AE28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6681EE3-368D-4FBD-99F7-42CBED22AE28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6681EE3-368D-4FBD-99F7-42CBED22AE28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6681EE3-368D-4FBD-99F7-42CBED22AE28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,72 @@
+2022-03-05 18:03:08.3321|INFO|PictureEncoder.Program|开始运行
+2022-03-05 18:10:51.6150|INFO|PictureEncoder.Program|开始运行
+2022-03-05 18:11:22.1890|INFO|PictureEncoder.Program|开始运行
+2022-03-05 18:11:27.5352|INFO|PictureEncoder.Program|开始运行
+2022-03-05 18:11:43.4697|INFO|PictureEncoder.Program|开始运行
+2022-03-05 18:11:46.8773|INFO|PictureEncoder.Program|开始运行
+2022-03-05 18:12:22.2274|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:19:00.1269|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:19:39.8149|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:19:57.2279|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:19:57.3668|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:19:57.6097|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:19:57.6107|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:22:37.9876|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:22:38.0706|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:22:38.2765|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:22:38.2765|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:22:52.2994|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:23:00.2519|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:23:00.3337|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:23:00.5405|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:23:00.5405|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:24:34.5352|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:24:38.9925|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:24:39.0709|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:24:39.2692|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:24:39.2692|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:25:18.0482|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:25:40.2101|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:25:40.2888|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:25:40.4942|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:25:40.4942|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:26:07.2987|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:26:15.6445|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:26:15.7265|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:26:15.9393|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:26:15.9393|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:27:27.5648|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:28:15.2851|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:28:23.0807|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:28:23.1628|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:28:23.3782|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:28:23.3782|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:29:01.4745|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:29:07.9864|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:29:08.0603|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:29:08.2797|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:29:08.2797|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:29:23.5017|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:29:27.1578|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:29:27.2590|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:29:27.4865|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:29:27.4865|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:29:46.4910|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:29:46.5769|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:29:46.7921|INFO|PictureEncoder.Program|图片加载成功，尺寸: 2160x3840, 总计 8294400px
+2022-03-05 19:29:46.7921|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:30:27.0721|INFO|PictureEncoder.Program|加密图片 结束, 耗时 40.28s
+2022-03-05 19:30:27.0721|INFO|PictureEncoder.Program|加密完毕，储存到: 88869499_encoded.png
+2022-03-05 19:39:28.0811|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:39:28.1588|INFO|PictureEncoder.Program|正在加载图片 88869499.png
+2022-03-05 19:39:28.2483|INFO|PictureEncoder.Program|图片加载成功，尺寸: 648x1152, 总计 746496px
+2022-03-05 19:39:28.2483|INFO|PictureEncoder.Program|开始进行加密图片
+2022-03-05 19:39:40.3382|INFO|PictureEncoder.Program|加密图片 结束, 耗时 12.09s
+2022-03-05 19:39:40.3382|INFO|PictureEncoder.Program|加密完毕，储存到: 88869499_encoded.png
+2022-03-05 19:43:45.3140|INFO|PictureEncoder.Program|开始运行
+2022-03-05 19:43:45.3956|INFO|PictureEncoder.Program|正在加载图片 88869499_encoded.png
+2022-03-05 19:43:45.4796|INFO|PictureEncoder.Program|图片加载成功，尺寸: 648x1152, 总计 746496px
+2022-03-05 19:43:45.4796|INFO|PictureEncoder.Program|开始进行解密图片
+2022-03-05 19:43:45.5147|INFO|PictureEncoder.Program|解密图片 结束, 耗时 0.03s
+2022-03-05 19:43:45.5147|INFO|PictureEncoder.Program|解密完毕，储存到: 88869499_decoded.png
+2022-04-01 14:33:14.3310|INFO|PictureEncoder.Program|开始运行

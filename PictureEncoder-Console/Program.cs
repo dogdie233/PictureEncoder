@@ -1,6 +1,4 @@
 ﻿using NLog;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using System.CommandLine;
 using System.CommandLine.Binding;
 using System.Security.Cryptography;
@@ -83,7 +81,7 @@ namespace PictureEncoder
 			this.SetHandler<CommandOption>(CommandHandler, Binder);
 		}
 
-		public void CommandHandler(CommandOption options)
+		public async void CommandHandler(CommandOption options)
 		{
 			Program.Debug = options.Debug;
 			if (options.File == null || !options.File.Exists)
@@ -97,44 +95,20 @@ namespace PictureEncoder
 				var path = options.File.Name.Substring(0, options.File.Name.LastIndexOf('.')) + "_encoded.png";
 				options.OutPath = new FileInfo(path);
 			}
-			using var mySHA256 = SHA256.Create();
-			var passwordBytes = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(options.Password));
-			var passwordInts = new int[8];
-			for (int i = 0; i < passwordInts.Length; i++)
-			{
-				passwordInts[i] = BitConverter.ToInt32(passwordBytes, i * 4);
-			}
-			_logger.Info($"正在加载图片 {options.File.Name}");
-			_logger.Debug($"输出路径 {options.OutPath.FullName}");
-			_logger.Debug($"密码: {options.Password} 0x" + string.Join(' ', passwordBytes.Select(b => b.ToString("X2"))));
-			using var image = Image.Load<Rgba32>(options.File.FullName);
-			var totalPixel = image.Width * image.Height;
-			_logger.Info($"图片加载成功，尺寸: {image.Width}x{image.Height}, 总计 {totalPixel}px");
-			var progressBar = new ConsoleProgressBar("加密图片", _logger);
-			var index = 0;
-			image.ProcessPixelRows(accessor =>
-			{
-				int hash = passwordInts[index];
-				for (int y = 0; y < image.Height; y++)
-				{
-					var row = accessor.GetRowSpan(y);
 
-					for (int x = 0; x < image.Width; x++)
-					{
-						hash = hash * 31 + passwordInts[index] * x * y;
-						index = (index + 1) % 8;
-						var bytes = BitConverter.GetBytes(hash);
-						row[x].R += bytes[0];
-						row[x].G += bytes[1];
-						row[x].B += bytes[2];
-						row[x].A = 255;
-						progressBar.Report((double)(y * image.Width + x + 1) / totalPixel);
-					}
-				}
-				progressBar.Dispose();
-			});
+			// 执行加密
+			_logger.Info($"待加密图片路径: {options.File.FullName}");
+			var inputStream = options.File.OpenRead();
+			var progressBar = new ConsoleProgressBar("加密图片", _logger);
+			var outputStream = await Encoder.Encode(options.Password, inputStream, progressBar);
+			progressBar.Dispose();
+
+			// 保存图片
 			_logger.Info($"加密完毕，储存到: {options.OutPath.Name}");
-			image.SaveAsPng(options.OutPath.FullName);
+			if (options.OutPath.Exists) { options.OutPath.Delete(); }
+			using var fileStream = options.OutPath.OpenWrite();
+			outputStream.CopyTo(fileStream);
+			fileStream.Close();
 		}
 	}
 	public class DecodeCommand : Command
@@ -154,7 +128,7 @@ namespace PictureEncoder
 			this.SetHandler<CommandOption>(CommandHandler, Binder);
 		}
 
-		public void CommandHandler(CommandOption options)
+		public async void CommandHandler(CommandOption options)
 		{
 			Program.Debug = options.Debug;
 			if (options.File == null || !options.File.Exists)
@@ -169,44 +143,20 @@ namespace PictureEncoder
 				var path = (fileName.EndsWith("_encoded") ? fileName.Substring(0, fileName.Length - 8) : fileName) + "_decoded.png";
 				options.OutPath = new FileInfo(path);
 			}
-			using var mySHA256 = SHA256.Create();
-			var passwordBytes = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(options.Password));
-			var passwordInts = new int[8];
-			for (int i = 0; i < passwordInts.Length; i++)
-			{
-				passwordInts[i] = BitConverter.ToInt32(passwordBytes, i * 4);
-			}
-			_logger.Info($"正在加载图片 {options.File.Name}");
-			_logger.Debug($"输出路径 {options.OutPath.FullName}");
-			_logger.Debug($"密码: {options.Password} 0x" + string.Join(' ', passwordBytes.Select(b => b.ToString("X2"))));
-			using var image = Image.Load<Rgba32>(options.File.FullName);
-			var totalPixel = image.Width * image.Height;
-			_logger.Info($"图片加载成功，尺寸: {image.Width}x{image.Height}, 总计 {totalPixel}px");
-			var progressBar = new ConsoleProgressBar("解密图片", _logger);
-			var index = 0;
-			image.ProcessPixelRows(accessor =>
-			{
-				int hash = passwordInts[index];
-				for (int y = 0; y < image.Height; y++)
-				{
-					var row = accessor.GetRowSpan(y);
 
-					for (int x = 0; x < image.Width; x++)
-					{
-						hash = hash * 31 + passwordInts[index] * x * y;
-						index = (index + 1) % 8;
-						var bytes = BitConverter.GetBytes(hash);
-						row[x].R -= bytes[0];
-						row[x].G -= bytes[1];
-						row[x].B -= bytes[2];
-						row[x].A = 255;
-						progressBar.Report((double)(y * image.Width + x + 1) / totalPixel);
-					}
-				}
-				progressBar.Dispose();
-			});
+			// 执行解密
+			_logger.Info($"待解密图片路径: {options.File.FullName}");
+			var inputStream = options.File.OpenRead();
+			var progressBar = new ConsoleProgressBar("解密图片", _logger);
+			var outputStream = await Encoder.Decode(options.Password, inputStream, progressBar);
+			progressBar.Dispose();
+
+			// 保存图片
 			_logger.Info($"解密完毕，储存到: {options.OutPath.Name}");
-			image.SaveAsPng(options.OutPath.FullName);
+			if (options.OutPath.Exists) { options.OutPath.Delete(); }
+			using var fileStream = options.OutPath.OpenWrite();
+			outputStream.CopyTo(fileStream);
+			fileStream.Close();
 		}
 	}
 	#endregion
