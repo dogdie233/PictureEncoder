@@ -1,0 +1,44 @@
+﻿<Window x:Class="PictureEncoder_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PictureEncoder_WPF"
+        mc:Ignorable="d"
+        Title="图片加密器" Height="450" Width="800">
+    <Grid>
+        <Grid Margin="10,10,10,50" AllowDrop="True" DragEnter="FileList_DragEnter" Drop="FileList_Drop">
+            <ListView Name="FileList" KeyUp="FileList_KeyUp" d:ItemsSource="{d:SampleData ItemCount=5}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="文件名" Width="120">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="进度" Width="300">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ProgressBar Value="{Binding Progress}" Width="285" Height="10"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <TextBlock Name="ImportTipLabel" FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center" Text="将图片拖入此处导入图片"/>
+        </Grid>
+        <Grid Name="optionsGrid" Height="30" Margin="10,0,10,10" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="EncodeButton" Click="EncodeButton_Click" Grid.Column="0" Margin="0,0,10,0" Content="加密" FontSize="16"/>
+            <Button Name="DecodeButton" Click="DecodeButton_Click" Grid.Column="1" Margin="0,0,10,0" Content="解密" FontSize="16"/>
+            <TextBox Name="PasswordField" Grid.Column="2" TextWrapping="NoWrap" ToolTip="加密/解密用的密码" Text="加密/解密的密码" MaxLines="1" FontSize="16"/>
+        </Grid>
+    </Grid>
+</Window>
