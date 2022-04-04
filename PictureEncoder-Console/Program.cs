@@ -100,7 +100,7 @@ namespace PictureEncoder
 			_logger.Info($"待加密图片路径: {options.File.FullName}");
 			var inputStream = options.File.OpenRead();
 			var progressBar = new ConsoleProgressBar("加密图片", _logger);
-			var outputStream = await Encoder.Encode(options.Password, inputStream, progressBar);
+			using var outputStream = await Encoder.Encode(options.Password, inputStream, progressBar);
 			progressBar.Dispose();
 
 			// 保存图片
@@ -148,7 +148,7 @@ namespace PictureEncoder
 			_logger.Info($"待解密图片路径: {options.File.FullName}");
 			var inputStream = options.File.OpenRead();
 			var progressBar = new ConsoleProgressBar("解密图片", _logger);
-			var outputStream = await Encoder.Decode(options.Password, inputStream, progressBar);
+			using var outputStream = await Encoder.Decode(options.Password, inputStream, progressBar);
 			progressBar.Dispose();
 
 			// 保存图片

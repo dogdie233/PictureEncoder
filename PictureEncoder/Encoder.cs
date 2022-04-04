@@ -35,7 +35,7 @@ namespace PictureEncoder
 						}
 					}
 				});
-				using var outputStream = new MemoryStream();
+				var outputStream = new MemoryStream();
 				image.SaveAsPng(outputStream);
 				return outputStream;
 			});
