@@ -1,2 +1,0 @@
-C:\Users\admin\source\repos\PictureEncoder\PictureEncoder\bin\Release\net6.0\publish\win-x86\PictureEncoder.pdb
-C:\Users\admin\source\repos\PictureEncoder\PictureEncoder\bin\Release\net6.0\publish\win-x86\PictureEncoder.exe

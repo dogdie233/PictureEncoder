@@ -13,8 +13,7 @@ namespace PictureEncoder_WPF
         private string _fileName;
         private string _filePath;
         private double _progress;
-        private bool _failed;
-        private FileStream _stream;
+        private bool _succeed;
 
         public string FileName
         {
@@ -43,28 +42,32 @@ namespace PictureEncoder_WPF
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Progress)));
             }
         }
-        public bool Failed
+        public bool Succeed
         {
-            get => _failed;
+            get => _succeed;
             set
             {
-                _failed = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Failed)));
+                _succeed = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Succeed)));
             }
         }
-        public FileStream Stream => _stream;
 
         public Work(string fileName, string filePath)
         {
             _fileName = fileName;
             _filePath = filePath;
             _progress = 0d;
-            _failed = false;
-            _stream = File.OpenRead(filePath);
+            _succeed = true;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public void Report(double value) => Progress = value * 100;
+
+        public void Reset()
+        {
+            Progress = 0f;
+            Succeed = true;
+        }
     }
 }

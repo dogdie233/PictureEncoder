@@ -3,5 +3,7 @@
 # output
 PictureEncoder/bin/
 PictureEncoder/obj/
-/PictureEncoder-WPF/bin/
-/PictureEncoder-WPF/obj/
+PictureEncoder-Console/bin/
+PictureEncoder-Console/obj/
+PictureEncoder-WPF/bin/
+PictureEncoder-WPF/obj/

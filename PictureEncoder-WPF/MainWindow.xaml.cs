@@ -1,10 +1,12 @@
 ﻿using PictureEncoder;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,7 +29,11 @@ namespace PictureEncoder_WPF
     public enum DoWorkResult
     {
         Succeed,
+        UnknownImageFormat,
+        NoPremission,
+        InputFileNotFound,
         WriteFailed,
+        Unknown,
     }
 
     /// <summary>
@@ -38,7 +44,6 @@ namespace PictureEncoder_WPF
         private bool _working = false;
 
         private readonly BindingList<Work> works;
-        public bool IsWorksEmpty => works.Count == 0;
         public bool Working
         {
             get => _working;
@@ -46,13 +51,14 @@ namespace PictureEncoder_WPF
             {
                 if (value == _working) { return; }
                 _working = value;
-                Dispatcher.Invoke(value ? LockAllElements : UnlockAllElements);
+                Dispatcher.Invoke(value ? LockAllComponents : UnlockAllComponents);
             }
         }
 
         public MainWindow()
         {
             InitializeComponent();
+
             works = new();
             FileList.ItemsSource = works;
 
@@ -63,10 +69,14 @@ namespace PictureEncoder_WPF
                 if (works.Count == 0)
                 {
                     ImportTipLabel.Visibility = Visibility.Visible;
+                    LockAllComponents();
                     return;
                 }
                 ImportTipLabel.Visibility = Visibility.Collapsed;
+                UnlockAllComponents();
             };
+
+            Working = false;
         }
 
         #region File Drop Process
@@ -86,7 +96,7 @@ namespace PictureEncoder_WPF
             (var succeed, var failedPaths) = Utils.FliterPaths(files);
 
             // 输出结果
-            var resultSB = new System.Text.StringBuilder();
+            var resultSB = new StringBuilder();
             resultSB.Append("成功导入 ");
             resultSB.Append(succeed.Count);
             resultSB.AppendLine(" 张图片");
@@ -110,35 +120,43 @@ namespace PictureEncoder_WPF
         // 删除任务
         private void FileList_KeyUp(object sender, KeyEventArgs e)
         {
+            if (Working) { return; }
             if (e.Key == Key.Delete)
             {
                 if (FileList.SelectedItems.Count == 0) { return; }
                 var selectedItems = new Work[FileList.SelectedItems.Count];
                 FileList.SelectedItems.CopyTo(selectedItems, 0);
-                foreach (var item in selectedItems) { works.Remove(item); }
+                foreach (var item in selectedItems)
+                {
+                    works.Remove(item);
+                }
             }
         }
 
+        #region Buttons Process
         private void EncodeButton_Click(object sender, RoutedEventArgs e)
         {
+            if (Working) { return; }
             var savePath = Utils.GetSaveFolderPath();
             if (savePath == null) { return; }
-            EncodeAndSaveAsync(savePath);
+            OperateAndSaveAsync(savePath, false);
         }
 
         private void DecodeButton_Click(object sender, RoutedEventArgs e)
         {
-            LockAllElements();
+            if (Working) { return; }
             var savePath = Utils.GetSaveFolderPath();
-            if (savePath == null)
-            {
-                UnlockAllElements();
-                return;
-            }
+            if (savePath == null) { return; }
+            OperateAndSaveAsync(savePath, true);
         }
+        #endregion
 
-        private async void EncodeAndSaveAsync(string savePath)
+        private async void OperateAndSaveAsync(string savePath, bool decode)
         {
+            // 格式化保存位置
+            savePath = savePath.Replace('\\', '/');
+            savePath = savePath.EndsWith('/') ? savePath : savePath + '/';
+
             Working = true;
             // List效率不高，用Array
             var myWorks = new Work[works.Count];
@@ -149,21 +167,58 @@ namespace PictureEncoder_WPF
             for (int i = 0; i < myWorks.Length; i++)
             {
                 var work = myWorks[i];
+                work.Reset();  // 重置一下显示
                 tasks[i] = Task.Run(async () =>
                 {
-                    var path = savePath + "/" + work.FileName + "_encoded.png";
-                    var ms = await Encoder.Encode(password, work.Stream, work);
                     try
                     {
+                        // 打开文件流
+                        using var inputStream = File.OpenRead(work.FilePath);
+
+                        // 准备变量
+                        var path = savePath + work.FileName.Substring(0, work.FileName.LastIndexOf('.')) + (decode ? "_decoded.png" : "_encoded.png");
+
+                        // 执行操作
+                        using var ms = await (decode ? PicEncoder.Decode(password, inputStream, work) : PicEncoder.Encode(password, inputStream, work));
+
+                        // 防止在加密过程中删掉了输出文件夹
+                        if (!Directory.Exists(savePath)) { Directory.CreateDirectory(savePath); }
+
+                        // 替换
                         if (File.Exists(path)) { File.Delete(path); }
                         using var fs = File.Create(path);
+
+                        // 写入
                         ms.CopyTo(fs);
-                        fs.Flush();
                     }
-                    catch
+                    catch (UnknownImageFormatException)
                     {
-                        work.Failed = true;
+                        work.Succeed = false;
+                        return DoWorkResult.UnknownImageFormat;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        work.Succeed = false;
+                        return DoWorkResult.NoPremission;
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        work.Succeed = false;
+                        return DoWorkResult.InputFileNotFound;
+                    }
+                    catch (IOException)
+                    {
+                        work.Succeed = false;
                         return DoWorkResult.WriteFailed;
+                    }
+                    catch (Exception)
+                    {
+                        work.Succeed = false;
+#if DEBUG
+                        throw;  // 抛出让我ｄｅｂｕｇ罢
+#else
+                        return DoWorkResult.Unknown;
+#endif
                     }
                     return DoWorkResult.Succeed;
                 });
@@ -171,6 +226,7 @@ namespace PictureEncoder_WPF
 
             await Task.Run(() =>
             {
+                // 等待所有任务完成
                 Task.WaitAll(tasks);
                 var results = new Dictionary<DoWorkResult, List<Work>>();
                 
@@ -180,7 +236,8 @@ namespace PictureEncoder_WPF
                     results[tasks[i].Result].Add(myWorks[i]);
                 }
 
-                var sb = new System.Text.StringBuilder();
+                // 打印结果
+                var sb = new StringBuilder();
                 foreach (var kvp in results)
                 {
                     sb.AppendLine(Utils.GetWorkResultString(kvp.Key));
@@ -190,31 +247,42 @@ namespace PictureEncoder_WPF
                         sb.AppendLine(work.FileName);
                     }
                 }
-                MessageBox.Show(sb.ToString(), "加密完成");
+                MessageBox.Show(sb.ToString(), "操作完成");
+                Working = false;
             });
         }
 
-        private void LockAllElements()
+        /// <summary>
+        /// 锁定下面的3个组件
+        /// </summary>
+        private void LockAllComponents()
         {
             EncodeButton.IsEnabled = false;
             DecodeButton.IsEnabled = false;
             PasswordField.IsEnabled = false;
         }
 
-        private void UnlockAllElements()
+        /// <summary>
+        /// 解锁下面的3个组件
+        /// </summary>
+        private void UnlockAllComponents()
         {
             EncodeButton.IsEnabled = true;
             DecodeButton.IsEnabled = true;
             PasswordField.IsEnabled = true;
         }
-
+        
+        /// <summary>
+        /// 将新的文件与已经导入的文件合并
+        /// </summary>
+        /// <param name="files">待添加的图片</param>
         private void MergeInWorkList(IEnumerable<FileInfo> files)
         {
             var origin = works.ToArray();
             works.Clear();
             var newList = origin.Select(w => new FileInfo(w.FilePath))
                 .Union(files)
-                .Distinct((a, b) => a.Name == b.Name)
+                .Distinct(i => i.Name)
                 .Select(i => new Work(i.Name, i.FullName));
             foreach (var element in newList)
             {

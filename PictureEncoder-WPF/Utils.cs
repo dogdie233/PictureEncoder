@@ -16,8 +16,8 @@ namespace PictureEncoder_WPF
         /// <summary>
         /// 过滤路径，返回存在的、后缀名是支持的路径，其实应该通过文件头来判断的
         /// </summary>
-        /// <param name="paths"></param>
-        /// <returns></returns>
+        /// <param name="paths">路径</param>
+        /// <returns>返回过滤的路径</returns>
         public static (List<FileInfo> succeedFiles, List<KeyValuePair<string, FileLoadFailedReason>> failedFiles) FliterPaths(string[] paths)
         {
             var failedFiles = new List<KeyValuePair<string, FileLoadFailedReason>>();
@@ -67,7 +67,11 @@ namespace PictureEncoder_WPF
         public static string GetWorkResultString(DoWorkResult result) => result switch
         {
             DoWorkResult.Succeed => "保存成功",
-            DoWorkResult.WriteFailed => "保存失败",
+            DoWorkResult.UnknownImageFormat => "图片已损坏/不支持的图片格式",
+            DoWorkResult.NoPremission => "权限不足，请使用管理员权限运行或更换图片目录",
+            DoWorkResult.InputFileNotFound => "待加密图片不存在",
+            DoWorkResult.WriteFailed => "保存时写入失败",
+            DoWorkResult.Unknown => "未知错误",
             _ => "",
         };
 

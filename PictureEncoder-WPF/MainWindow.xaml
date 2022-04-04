@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:PictureEncoder_WPF"
         mc:Ignorable="d"
         Title="图片加密器" Height="450" Width="800">
+    <Window.Resources>
+        <local:BooleanResultColorValueConverter x:Key="BooleanResultColorValueConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid Margin="10,10,10,50" AllowDrop="True" DragEnter="FileList_DragEnter" Drop="FileList_Drop">
             <ListView Name="FileList" KeyUp="FileList_KeyUp" d:ItemsSource="{d:SampleData ItemCount=5}">
@@ -21,7 +24,7 @@
                         <GridViewColumn Header="进度" Width="300">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ProgressBar Value="{Binding Progress}" Width="285" Height="10"/>
+                                    <ProgressBar Value="{Binding Progress}" Width="285" Height="10" Foreground="{Binding Succeed, Converter={StaticResource BooleanResultColorValueConverter}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -36,9 +39,9 @@
                 <ColumnDefinition Width="70"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="EncodeButton" Click="EncodeButton_Click" Grid.Column="0" Margin="0,0,10,0" Content="加密" FontSize="16"/>
-            <Button Name="DecodeButton" Click="DecodeButton_Click" Grid.Column="1" Margin="0,0,10,0" Content="解密" FontSize="16"/>
-            <TextBox Name="PasswordField" Grid.Column="2" TextWrapping="NoWrap" ToolTip="加密/解密用的密码" Text="加密/解密的密码" MaxLines="1" FontSize="16"/>
+            <Button Name="EncodeButton" Click="EncodeButton_Click" Grid.Column="0" Margin="0,0,10,0" Content="加密" FontSize="16" IsEnabled="False"/>
+            <Button Name="DecodeButton" Click="DecodeButton_Click" Grid.Column="1" Margin="0,0,10,0" Content="解密" FontSize="16" IsEnabled="False"/>
+            <TextBox Name="PasswordField" Grid.Column="2" TextWrapping="NoWrap" ToolTip="加密/解密用的密码" Text="加密/解密的密码" MaxLines="1" FontSize="16" IsEnabled="False"/>
         </Grid>
     </Grid>
 </Window>
