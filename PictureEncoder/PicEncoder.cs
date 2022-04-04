@@ -5,9 +5,17 @@ using System.Text;
 
 namespace PictureEncoder
 {
-    public static class Encoder
+    public static class PicEncoder
     {
-        public static async Task<MemoryStream> Encode(string password, Stream fileInput, IProgress<double> progress)
+		/// <summary>
+		/// 加密图片
+		/// </summary>
+		/// <param name="password">加密使用的密码</param>
+		/// <param name="fileInput">待加密图片的二进制流</param>
+		/// <param name="progress">进度报告器</param>
+		/// <exception cref="UnknownImageFormatException">未知的图片格式</exception>
+		/// <returns>编码后的png二进制流</returns>
+        public static async Task<MemoryStream> Encode(string password, Stream fileInput, IProgress<double>? progress = null)
         {
 			return await Task.Run(() =>
 			{
@@ -31,17 +39,26 @@ namespace PictureEncoder
 							row[x].G += bytes[1];
 							row[x].B += bytes[2];
 							row[x].A = 255;
-							progress.Report((double)(y * image.Width + x + 1) / totalPixel);
+							progress?.Report((double)(y * image.Width + x + 1) / totalPixel);
 						}
 					}
 				});
 				var outputStream = new MemoryStream();
 				image.SaveAsPng(outputStream);
+				outputStream.Seek(0, SeekOrigin.Begin);
 				return outputStream;
 			});
 		}
 
-		public static async Task<MemoryStream> Decode(string password, Stream fileInput, IProgress<double> progress)
+		/// <summary>
+		/// 解密图片
+		/// </summary>
+		/// <param name="password">解密使用的密码</param>
+		/// <param name="fileInput">待解密图片的二进制流</param>
+		/// <param name="progress">进度报告器</param>
+		/// <exception cref="UnknownImageFormatException">未知的图片格式</exception>
+		/// <returns>编码后的png二进制流</returns>
+		public static async Task<MemoryStream> Decode(string password, Stream fileInput, IProgress<double>? progress = null)
         {
 			return await Task.Run(() =>
 			{
@@ -65,17 +82,18 @@ namespace PictureEncoder
 							row[x].G -= bytes[1];
 							row[x].B -= bytes[2];
 							row[x].A = 255;
-							progress.Report((double)(y * image.Width + x + 1) / totalPixel);
+							progress?.Report((double)(y * image.Width + x + 1) / totalPixel);
 						}
 					}
 				});
-				using var outputStream = new MemoryStream();
+				var outputStream = new MemoryStream();
 				image.SaveAsPng(outputStream);
+				outputStream.Seek(0, SeekOrigin.Begin);
 				return outputStream;
 			});
         }
 
-		public static int[] ComputePasswordHash(string password)
+		private static int[] ComputePasswordHash(string password)
         {
 			using var mySHA256 = SHA256.Create();
 			var passwordBytes = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(password));
