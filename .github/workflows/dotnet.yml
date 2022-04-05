@@ -6,13 +6,9 @@ env:
   DOTNET_SDK_VERSION: '6.0.x'
 
 jobs:
-
-  build-win-x64-arm64:
-    
+  build-win-x64:
     runs-on: windows-latest
-    
     steps:
-      
       - uses: actions/checkout@v2
 
       - name: Set up dotnet
@@ -20,11 +16,27 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
           include-prerelease: true
-      - name: Build Win64
-        run: dotnet publish -r win-x64 -c Release -o artifact-x64
+      
+      - name: Build win-x64
+        run: cd ./PictureEncoder-Console/ | dotnet publish -r win-x64 -c Release -o ../artifact-x64 /p:PublishSingleFile=true --no-self-contained
+        
+      - name: Build win-arm64
+        run: cd ./PictureEncoder-WPF/ | dotnet publish -r win-x64 -c Release -o ../artifact-arm64 /p:PublishSingleFile=true --no-self-contained
 
-      - name: Upload Artifact[win-x64]
-        uses: actions/upload-artifact@1.0.0
+      - name: Upload Console Artifact[win-x64]
+        uses: actions/upload-artifact@v3
         with:
-          name: PictureEncoder_win-x64
-          path: artifact-x64\PictureEncoder.exe
+          name: PictureEncoder_Console_win-x64
+          path: artifact-x64/PictureEncoder-Console.exe
+          
+      - name: Upload Console Artifact[win-arm64]
+        uses: actions/upload-artifact@v3
+        with:
+          name: PictureEncoder_Console_win-arm64
+          path: artifact-arm64/PictureEncoder-Console.exe
+          
+      - name: Upload WPF Artifact[win-x64]
+        uses: actions/upload-artifact@v3
+        with:
+          name: PictureEncoder_WPF_win-x64
+          path: artifact-x64/PictureEncoder-WPF.exe
