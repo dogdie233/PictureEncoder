@@ -117,26 +117,40 @@ namespace PictureEncoder_WPF
         }
         #endregion
 
-        // 删除任务
+        #region Delete Works
         private void FileList_KeyUp(object sender, KeyEventArgs e)
         {
+            if (Working || e.Key != Key.Delete) { return; }
+            DeleteSelectedItems();
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
             if (Working) { return; }
-            if (e.Key == Key.Delete)
+            DeleteSelectedItems();
+        }
+
+        private void DeleteSelectedItems()
+        {
+            if (FileList.SelectedItems.Count == 0) { return; }
+            var selectedItems = new Work[FileList.SelectedItems.Count];
+            FileList.SelectedItems.CopyTo(selectedItems, 0);
+            foreach (var item in selectedItems)
             {
-                if (FileList.SelectedItems.Count == 0) { return; }
-                var selectedItems = new Work[FileList.SelectedItems.Count];
-                FileList.SelectedItems.CopyTo(selectedItems, 0);
-                foreach (var item in selectedItems)
-                {
-                    works.Remove(item);
-                }
+                works.Remove(item);
             }
         }
+        #endregion
 
         #region Buttons Process
         private void EncodeButton_Click(object sender, RoutedEventArgs e)
         {
             if (Working) { return; }
+            if (string.IsNullOrEmpty(PasswordField.Text))
+            {
+                var tipResult = MessageBox.Show("当前密码为空，这会使你的加密结果不安全，是否继续", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (tipResult != MessageBoxResult.Yes) { return; }
+            }
             var savePath = Utils.GetSaveFolderPath();
             if (savePath == null) { return; }
             OperateAndSaveAsync(savePath, false);
@@ -145,6 +159,11 @@ namespace PictureEncoder_WPF
         private void DecodeButton_Click(object sender, RoutedEventArgs e)
         {
             if (Working) { return; }
+            if (string.IsNullOrEmpty(PasswordField.Text))
+            {
+                var tipResult = MessageBox.Show("当前密码为空，这大概率会得到错误的结果，是否继续", "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (tipResult != MessageBoxResult.Yes) { return; }
+            }
             var savePath = Utils.GetSaveFolderPath();
             if (savePath == null) { return; }
             OperateAndSaveAsync(savePath, true);
@@ -247,9 +266,19 @@ namespace PictureEncoder_WPF
                         sb.AppendLine(work.FileName);
                     }
                 }
-                MessageBox.Show(sb.ToString(), "操作完成");
+                MessageBox.Show(sb.ToString(), decode ? "解密完成" : "加密完成");
                 Working = false;
             });
+        }
+
+        private void PasswordField_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(PasswordField.Text))
+            {
+                PasswordFieldTip.Visibility = Visibility.Visible;
+                return;
+            }
+            PasswordFieldTip.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>

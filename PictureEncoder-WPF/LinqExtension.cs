@@ -13,10 +13,10 @@ namespace PictureEncoder_WPF
         /// </summary>
         public static IEnumerable<TElement> Distinct<TElement, T2>(this IEnumerable<TElement> source, Func<TElement, T2> getter)
         {
-            var hashSet = new HashSet<TElement>();
+            var hashSet = new HashSet<T2>();
             foreach (var element in source)
             {
-                if (hashSet.Add(element)) { yield return element; }
+                if (hashSet.Add(getter(element))) { yield return element; }
             }
         }
     }

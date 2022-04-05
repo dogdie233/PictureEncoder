@@ -14,24 +14,30 @@
             <ListView Name="FileList" KeyUp="FileList_KeyUp" d:ItemsSource="{d:SampleData ItemCount=5}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="文件名" Width="120">
+                        <GridViewColumn Header="文件名" Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding FileName}" ToolTip="{Binding FilePath}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="进度" Width="300">
+                        <GridViewColumn Header="进度" Width="550">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ProgressBar Value="{Binding Progress}" Width="285" Height="10" Foreground="{Binding Succeed, Converter={StaticResource BooleanResultColorValueConverter}}"/>
+                                    <ProgressBar Value="{Binding Progress}" Width="535" Height="10" Foreground="{Binding Succeed, Converter={StaticResource BooleanResultColorValueConverter}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                     </GridView>
                 </ListView.View>
+                <ListView.ContextMenu>
+                    <ContextMenu Width="200">
+                        <MenuItem Header="删除" Click="Delete_Click" Width="200">
+                        </MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
             </ListView>
-            <TextBlock Name="ImportTipLabel" FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center" Text="将图片拖入此处导入图片"/>
+            <TextBlock Name="ImportTipLabel" FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center" Text="将图片拖入此处导入图片" IsHitTestVisible="False"/>
         </Grid>
         <Grid Name="optionsGrid" Height="30" Margin="10,0,10,10" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
@@ -41,7 +47,8 @@
             </Grid.ColumnDefinitions>
             <Button Name="EncodeButton" Click="EncodeButton_Click" Grid.Column="0" Margin="0,0,10,0" Content="加密" FontSize="16" IsEnabled="False"/>
             <Button Name="DecodeButton" Click="DecodeButton_Click" Grid.Column="1" Margin="0,0,10,0" Content="解密" FontSize="16" IsEnabled="False"/>
-            <TextBox Name="PasswordField" Grid.Column="2" TextWrapping="NoWrap" ToolTip="加密/解密用的密码" Text="加密/解密的密码" MaxLines="1" FontSize="16" IsEnabled="False"/>
+            <TextBox Name="PasswordField" Grid.Column="2" TextWrapping="NoWrap" ToolTip="加密/解密用的密码" MaxLines="1" FontSize="16" IsEnabled="False" TextChanged="PasswordField_TextChanged"/>
+            <Label Name="PasswordFieldTip" Grid.Column="2" Content="加密/解密用的密码" VerticalAlignment="Center" Foreground="Gray" FontSize="16" IsHitTestVisible="False"/>
         </Grid>
     </Grid>
 </Window>
