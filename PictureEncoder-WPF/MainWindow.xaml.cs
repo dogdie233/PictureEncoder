@@ -124,10 +124,16 @@ namespace PictureEncoder_WPF
             DeleteSelectedItems();
         }
 
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        private void Remove_Click(object sender, RoutedEventArgs e)
         {
             if (Working) { return; }
             DeleteSelectedItems();
+        }
+
+        private void RemoveAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (Working) { return; }
+            works.Clear();
         }
 
         private void DeleteSelectedItems()

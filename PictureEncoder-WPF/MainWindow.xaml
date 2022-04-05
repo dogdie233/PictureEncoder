@@ -32,8 +32,8 @@
                 </ListView.View>
                 <ListView.ContextMenu>
                     <ContextMenu Width="200">
-                        <MenuItem Header="删除" Click="Delete_Click" Width="200">
-                        </MenuItem>
+                        <MenuItem Header="移除" Click="Remove_Click" Width="200"/>
+                        <MenuItem Header="移除全部" Click="RemoveAll_Click"></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>
