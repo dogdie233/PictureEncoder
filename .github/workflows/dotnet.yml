@@ -17,11 +17,14 @@ jobs:
           dotnet-version: ${{ env.DOTNET_SDK_VERSION }}
           include-prerelease: true
       
-      - name: Build win-x64
-        run: cd ./PictureEncoder-Console/ | dotnet publish -r win-x64 -c Release -o ../artifact-x64 /p:PublishSingleFile=true --no-self-contained
+      - name: Build win-x64-WPF
+        run: dotnet publish PictureEncoder-WPF -r win-x64 -c Release -o ../artifact-x64 /p:PublishSingleFile=true --no-self-contained
+
+      - name: Build win-x64-Console
+        run: dotnet publish PictureEncoder-Console -r win-x64 -c Release -o ../artifact-x64 /p:PublishSingleFile=true --no-self-contained
         
-      - name: Build win-arm64
-        run: cd ./PictureEncoder-WPF/ | dotnet publish -r win-x64 -c Release -o ../artifact-arm64 /p:PublishSingleFile=true --no-self-contained
+      - name: Build win-arm64-Console
+        run: dotnet publish PictureEncoder-Console -r win-x64 -c Release -o ../artifact-arm64 /p:PublishSingleFile=true --no-self-contained
 
       - name: Upload Console Artifact[win-x64]
         uses: actions/upload-artifact@v3
